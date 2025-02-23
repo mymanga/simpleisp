@@ -7,8 +7,9 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # Setup logging
-touch /home/sisp/install.txt
-exec &> >(tee -a "/home/sisp/install.txt")
+INSTALL_LOG="/home/sisp/install.txt"
+touch $INSTALL_LOG
+exec &> >(tee -a "$INSTALL_LOG")
 
 # Get server hostname and set email
 DOMAIN=$(hostname -f)
@@ -54,7 +55,7 @@ systemctl enable mariadb
 MYSQL_USER="user_$(openssl rand -hex 3)"
 MYSQL_PASSWORD="$(openssl rand -base64 12)"
 MYSQL_DATABASE="radius"
-DB_CREDENTIALS_FILE="/var/www/html/db.txt"
+DB_CREDENTIALS_FILE="/home/sisp/db.txt"
 
 # Secure MariaDB installation
 mysql -e "UPDATE mysql.user SET Password=PASSWORD('$MYSQL_PASSWORD') WHERE User='root';"
@@ -266,3 +267,4 @@ certbot --nginx -d "$DOMAIN" --agree-tos --email "$EMAIL_ADDRESS" --no-eff-email
 echo "Installation completed successfully!"
 echo "You can find your database credentials in $DB_CREDENTIALS_FILE"
 echo "Your SimpleISP installation is available at: https://$DOMAIN"
+echo "Installation logs are available at: $INSTALL_LOG"
