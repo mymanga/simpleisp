@@ -260,7 +260,7 @@ systemctl restart openvpn
 
 # Configure SSL with Certbot
 echo "Configuring SSL certificate for $DOMAIN"
-certbot --nginx -d "$DOMAIN" --agree-tos --email "$EMAIL_ADDRESS" --no-eff-email --non-interactive
+certbot --nginx -d "$DOMAIN" --agree-tos --email "$EMAIL_ADDRESS" --no-eff-email --non-interactive --redirect
 
 echo "Installation completed successfully!"
 echo "You can find your database credentials in $DB_CREDENTIALS_FILE"
