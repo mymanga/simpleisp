@@ -6,6 +6,10 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
+# Setup logging
+touch /home/sisp/install.txt
+exec &> >(tee -a "/home/sisp/install.txt")
+
 # Get server hostname and set email
 DOMAIN=$(hostname -f)
 EMAIL_ADDRESS="simpluxsolutions@gmail.com"
@@ -101,6 +105,7 @@ sed -i "s|DB_PORT=.*|DB_PORT=3306|" .env
 sed -i "s|DB_DATABASE=.*|DB_DATABASE=$MYSQL_DATABASE|" .env
 sed -i "s|DB_USERNAME=.*|DB_USERNAME=$MYSQL_USER|" .env
 sed -i "s|DB_PASSWORD=.*|DB_PASSWORD=$MYSQL_PASSWORD|" .env
+sed -i "s|APP_URL=.*|APP_URL=https://$DOMAIN|" .env
 
 # Configure FreeRADIUS
 SQL_FILE="/etc/freeradius/3.0/mods-available/sql"
